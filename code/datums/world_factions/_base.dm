@@ -13,16 +13,16 @@
 	var/list/bounty_items = list() // Items this faction wants with multipliers
 	var/list/bounty_refresh_times = list() // When each bounty expires
 	var/next_supply_rotation = 0 // When supply packs refresh
-	var/supply_rotation_interval = 30 MINUTES // How often supplies rotate
+	var/supply_rotation_interval = 15 MINUTES // How often supplies rotate
 	var/bounty_rotation_interval = 15 MINUTES // How often bounties rotate
-	var/base_max_bounties = 5 // Base maximum number of active bounties
-	var/base_max_supply_packs = 15 // Base maximum supply packs available at once
+	var/base_max_bounties = 10 // Base maximum number of active bounties
+	var/base_max_supply_packs = 30 // Base maximum supply packs available at once
 	var/faction_color = "#FFFFFF" // Color for UI theming
 
 	// Reputation thresholds and bonuses
-	var/list/reputation_thresholds = list(0, 100, 300, 600, 1000, 1500, 2500) // Rep levels
-	var/bounty_rep_reward_base = 10 // Base rep for completing bounties
-	var/supply_rep_reward_base = 5 // Base rep for buying supplies
+	var/list/reputation_thresholds = list(0, 100, 200, 400, 600, 800, 1000) // Rep levels
+	var/bounty_rep_reward_base = 50 // Base rep for completing bounties
+	var/supply_rep_reward_base = 25 // Base rep for buying supplies
 
 	// Essential items that are always in stock
 	var/list/essential_packs = list()
@@ -40,10 +40,10 @@
 	var/exotic_weight = 5
 
 	// How many items from each pool to select (beyond essentials) - base values
-	var/base_common_picks = 8
-	var/base_uncommon_picks = 4
-	var/base_rare_picks = 2
-	var/base_exotic_picks = 1
+	var/base_common_picks = 20
+	var/base_uncommon_picks = 12
+	var/base_rare_picks = 6
+	var/base_exotic_picks = 2
 
 	var/list/allowed_maps = list()
 
@@ -127,7 +127,10 @@
 	var/list/created_traders = list()
 
 	for(var/datum/trader_data/trader_data in next_boat_traders)
-		var/mob/living/simple_animal/hostile/retaliate/trader/faction_trader/new_trader = new(spawn_location, TRUE, pick(trader_outfits), WEAKREF(src))
+		var/picked_outfit = pick(trader_outfits)
+		if(length(trader_data.outfit_override))
+			picked_outfit = pick(trader_data.outfit_override)
+		var/mob/living/simple_animal/hostile/retaliate/trader/faction_trader/new_trader = new(spawn_location, TRUE, picked_outfit, WEAKREF(src))
 		new_trader.set_custom_trade(trader_data)
 		new_trader.faction_ref = WEAKREF(src)
 		created_traders += new_trader
@@ -464,7 +467,10 @@
 	var/datum/trader_data/trader_data = new trader_type()
 	// Customize trader with faction-specific items
 	customize_trader_inventory(trader_data)
-	var/mob/living/simple_animal/hostile/retaliate/trader/faction_trader/new_trader = new(spawn_location, TRUE, pick(trader_outfits), WEAKREF(src))
+	var/picked_outfit = pick(trader_outfits)
+	if(length(trader_data.outfit_override))
+		picked_outfit = pick(trader_data.outfit_override)
+	var/mob/living/simple_animal/hostile/retaliate/trader/faction_trader/new_trader = new(spawn_location, TRUE, picked_outfit, WEAKREF(src))
 	new_trader.set_custom_trade(trader_data)
 	new_trader.faction_ref = WEAKREF(src)
 	current_trader_ref = WEAKREF(new_trader)

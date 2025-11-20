@@ -9,17 +9,15 @@
 	/// Loot the plant will yield for uprooting it
 	var/list/uproot_loot
 	/// Time in ticks the plant will require to mature
-	var/maturation_time = 6 MINUTES
+	var/maturation_time = DEFAULT_GROW_TIME
 	/// Time in ticks the plant will require to make produce
-	var/produce_time = 3 MINUTES
+	var/produce_time = DEFAULT_PRODUCE_TIME
 	/// Typepath of produce to make on harvest
 	var/atom/produce_type
 	/// Amount of minimum produce to make on harvest
 	var/produce_amount_min = 2
 	/// Amount of maximum produce to make on harvest
 	var/produce_amount_max = 3
-	/// How much nutrition will the plant require to mature fully
-	var/maturation_nutrition = HUNGRINESS_NORMAL
 	/// How much nutrition will the plant require to make produce
 	var/produce_nutrition = 20
 	/// If not perennial, the plant will uproot itself upon harvesting first produce
@@ -32,6 +30,8 @@
 	var/seed_color
 	/// Whether the plant can grow underground
 	var/can_grow_underground = FALSE
+	/// Whether the plant can grow in mushroom mound
+	var/mound_growth = FALSE
 
 	// NPK nutrient requirements (consumed during growth)
 	var/nitrogen_requirement = 30      // For leafy growth
@@ -47,6 +47,8 @@
 	var/plant_family = FAMILY_HERB
 	/// Identity of seeds with this type
 	var/seed_identity = "some seeds"
+	///this is if we become seethrough or not
+	var/see_through = FALSE
 
 /datum/plant_def/New()
 	. = ..()
@@ -219,5 +221,9 @@
 			return "Madder"
 		if(FAMILY_THEACEAE)
 			return "Theaceae"
+		if(FAMILY_FRUIT)
+			return "Fruit"
+		if(FAMILY_DIKARYA)
+			return "Dikarya"
 		else
 			return "Unknown"

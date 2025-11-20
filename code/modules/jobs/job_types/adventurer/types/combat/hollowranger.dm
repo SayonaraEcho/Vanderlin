@@ -1,5 +1,5 @@
-/datum/advclass/combat/hollowranger
-	name = "Hollow Ranger"
+/datum/job/advclass/combat/hollowranger
+	title = "Hollow Ranger"
 	tutorial = "While Rangers are seen often amongst Humen and Elves, Amber Hollow's Rangers are hardly seen at all. \
 	Acting mostly as scouts for groups of 'supply liberation' militia around their home, \
 	stealth is a virtue for a Hollow Ranger."
@@ -9,12 +9,15 @@
 		SPEC_ID_HUMEN,\
 		SPEC_ID_HARPY,\
 	)
-	outfit = /datum/outfit/job/adventurer/hollowranger
+	outfit = /datum/outfit/adventurer/hollowranger
 	min_pq = 0
 	category_tags = list(CTAG_ADVENTURER)
 	cmode_music = 'sound/music/cmode/adventurer/CombatIntense.ogg'
 
-/datum/outfit/job/adventurer/hollowranger/pre_equip(mob/living/carbon/human/H)
+	exp_types_granted  = list(EXP_TYPE_ADVENTURER, EXP_TYPE_COMBAT, EXP_TYPE_RANGER)
+
+
+/datum/outfit/adventurer/hollowranger/pre_equip(mob/living/carbon/human/H)
 	..()
 	head = /obj/item/clothing/head/roguehood/colored/red
 	mask = /obj/item/clothing/face/shepherd/rag
@@ -51,3 +54,4 @@
 	H.change_stat(STATKEY_SPD, 2) // Speedy out of necessity! Get the hell outta there
 
 	ADD_TRAIT(H, TRAIT_BESTIALSENSE, TRAIT_GENERIC) // Dendor influence in nature blesses them with the Eyes of the Zad
+	H.update_sight()

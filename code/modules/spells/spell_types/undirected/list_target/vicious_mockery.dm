@@ -1,4 +1,4 @@
-/datum/action/cooldown/spell/undirected/list_target/vicious_mockery
+/datum/action/cooldown/spell/vicious_mockery
 	name = "Vicious Mockery"
 	desc = "Make a fool of a target and enrage them."
 	button_icon_state = "tragedy"
@@ -6,15 +6,19 @@
 
 	associated_skill = /datum/skill/misc/music
 
+	charge_required = FALSE
 	spell_type = NONE
 	cooldown_time = 30 SECONDS
 	invocation_type = INVOCATION_SHOUT
-	choose_target_message = "Choose who to mock."
+	has_visual_effects = FALSE
 
-/datum/action/cooldown/spell/undirected/list_target/vicious_mockery/is_valid_target(atom/cast_on)
+/datum/action/cooldown/spell/vicious_mockery/is_valid_target(atom/cast_on)
+	. = ..()
+	if(!.)
+		return
 	return isliving(cast_on)
 
-/datum/action/cooldown/spell/undirected/list_target/vicious_mockery/before_cast(mob/living/cast_on)
+/datum/action/cooldown/spell/vicious_mockery/before_cast(mob/living/cast_on)
 	. = ..()
 	if(. & SPELL_CANCEL_CAST)
 		return
@@ -24,7 +28,10 @@
 	if(owner.cmode && ishuman(owner))
 		var/mob/living/carbon/human/H = owner
 		if(H.dna?.species)
-			message = pick_list_replacements("bard.json", "[H.dna.species.id]_mockery")
+			if(check_strings("bard.json", "[H.dna.species.id]_mockery"))
+				message = pick_list_replacements("bard.json", "[H.dna.species.id]_mockery")
+			else
+				message = pick_list_replacements("bard.json", "default_mockery")
 	else
 		message = browser_input_text(owner, "How will I mock this fool?", "XYLIX")
 		if(QDELETED(src) || QDELETED(owner) || QDELETED(cast_on) || !can_cast_spell())
@@ -36,7 +43,7 @@
 
 	invocation = message
 
-/datum/action/cooldown/spell/undirected/list_target/vicious_mockery/cast(mob/living/cast_on)
+/datum/action/cooldown/spell/vicious_mockery/cast(mob/living/cast_on)
 	. = ..()
 	if(cast_on.can_hear())
 		SEND_SIGNAL(owner, COMSIG_VICIOUSLY_MOCKED, cast_on)

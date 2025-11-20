@@ -1,7 +1,7 @@
 
 
 //IMPORTANT: Multiple animate() calls do not stack well, so try to do them all at once if you can.
-/mob/living/carbon/update_transform(forcepixel)
+/mob/living/carbon/update_transform()
 	var/matrix/ntransform = matrix(transform) //aka transform.Copy()
 	var/final_pixel_y = pixel_y
 	var/final_dir = dir
@@ -14,28 +14,26 @@
 		else //if(lying != 0)
 			if(lying_prev == 0) //Standing to lying
 				pixel_y = get_standard_pixel_y_offset()
-				final_pixel_y = get_standard_pixel_y_offset(lying_angle)
+				final_pixel_y =  get_standard_pixel_y_offset()
 				if(dir & (EAST|WEST)) //Facing east or west
-//					final_dir = pick(NORTH, SOUTH) //So you fall on your side rather than your face or ass
-					final_dir = SOUTH
+					final_dir = pick(NORTH, SOUTH) //So you fall on your side rather than your face or ass
 	if(resize != RESIZE_DEFAULT_SIZE)
 		changed++
 		ntransform.Scale(resize)
 		resize = RESIZE_DEFAULT_SIZE
 
 	if(changed)
-//		animate(src, transform = ntransform, time = (lying_prev == 0 || !lying) ? 2 : 0, pixel_y = final_pixel_y, dir = final_dir, easing = (EASE_IN|EASE_OUT))
-		transform = ntransform
+		ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, UPDATE_TRANSFORM_TRAIT)
+		addtimer(TRAIT_CALLBACK_REMOVE(src, TRAIT_NO_FLOATING_ANIM, UPDATE_TRANSFORM_TRAIT), 0.3 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
 		pixel_x = get_standard_pixel_x_offset()
 		pixel_y = final_pixel_y
+		animate(src, transform = ntransform, time = (lying_prev == 0 || !resting) ? 2 : 0, pixel_y = final_pixel_y, dir = final_dir, easing = (EASE_IN|EASE_OUT))
 		client?.pixel_x = pixel_x
 		client?.pixel_y = pixel_y
 		dir = final_dir
-		setMovetype(movement_type & ~FLOATING)  // If we were without gravity, the bouncing animation got stopped, so we make sure we restart it in next life().
 		update_vision_cone()
 	else
-		pixel_x = get_standard_pixel_x_offset()
-		pixel_y = get_standard_pixel_y_offset(lying_angle)
+		animate(src, time = 0.2 SECONDS, pixel_x = get_standard_pixel_x_offset(), pixel_y = get_standard_pixel_y_offset())
 		client?.pixel_x = pixel_x
 		client?.pixel_y = pixel_y
 
@@ -57,7 +55,7 @@
 		update_vision_cone()
 
 /mob/living/carbon/regenerate_icons()
-	if(notransform)
+	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
 		return 1
 	update_inv_hands()
 	update_inv_handcuffed()
@@ -244,7 +242,7 @@
 
 	if(client && hud_used)
 		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[TOBITSHIFT(ITEM_SLOT_MASK) + 1]
-		inv?.update_appearance()
+		inv?.update_appearance(UPDATE_ICON_STATE)
 
 	if(wear_mask)
 		if(!(ITEM_SLOT_MASK & check_obscured_slots()))
@@ -262,7 +260,7 @@
 
 	if(client && hud_used)
 		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[TOBITSHIFT(ITEM_SLOT_NECK) + 1]
-		inv?.update_appearance()
+		inv?.update_appearance(UPDATE_ICON_STATE)
 
 	if(wear_neck)
 		if(!(ITEM_SLOT_NECK & check_obscured_slots()))
@@ -284,7 +282,7 @@
 
 	if(client && hud_used)
 		var/atom/movable/screen/inventory/inv = hud_used.inv_slots[TOBITSHIFT(ITEM_SLOT_HEAD) + 1]
-		inv?.update_appearance()
+		inv?.update_appearance(UPDATE_ICON_STATE)
 
 	if(head)
 		if(hide_nonstandard && (head.worn_x_dimension != 32 || head.worn_y_dimension != 32))
@@ -330,7 +328,7 @@
 		for(var/hand in hud_used.hand_slots)
 			var/atom/movable/screen/inventory/hand/H = hud_used.hand_slots[hand]
 			if(H)
-				H.update_appearance()
+				H.update_appearance(UPDATE_OVERLAYS)
 
 //update whether our head item appears on our hud.
 /mob/living/carbon/proc/update_hud_head(obj/item/I)
@@ -446,17 +444,19 @@
 //produces a key based on the mob's limbs
 
 /mob/living/carbon/proc/generate_icon_render_key()
+	. = list()
 	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		. += "-[BP.body_zone]"
+		. += BP.body_zone
 		if(BP.animal_origin)
-			. += "-[BP.animal_origin]"
+			. += BP.animal_origin
 		if(BP.status == BODYPART_ORGANIC)
-			. += "-organic"
+			. += "organic"
 		else
-			. += "-robotic"
+			. += "robotic"
 
 	if(HAS_TRAIT(src, TRAIT_HUSK))
-		. += "-husk"
+		. += "husk"
+	return jointext(., "-")
 
 
 //change the mob's icon to the one matching its key

@@ -129,8 +129,8 @@
 		/obj/item/gem = list(20, INFINITY, ""),
 	)
 	custom_items = list(
-		/obj/item/reagent_containers/glass/bottle/glazed_teacup = list(5, 10, 6),
-		/obj/item/reagent_containers/glass/bottle/glazed_teapot = list(5, 40, 1),
+		/obj/item/reagent_containers/glass/cup/teacup/fancy = list(5, 10, 6),
+		/obj/item/reagent_containers/glass/carafe/teapot = list(5, 40, 1),
 	)
 	say_phrases = list(
 		ITEM_REJECTED_PHRASE = list(
@@ -509,6 +509,7 @@
 		/obj/item/neuFarm/seed/wheat/ancient = list(4, 15, 1),
 		/obj/item/neuFarm/seed/tea = list(4, 19, 3),
 		/obj/item/neuFarm/seed/coffee = list(4, 22, 5),
+		/obj/item/queen_bee = list(11, 50, 2),
 	)
 	say_phrases = list(
 		ITEM_REJECTED_PHRASE = list(

@@ -39,7 +39,7 @@
 		if(k.access2add)
 			src.access2add = k.access2add
 			return TRUE
-	var/list/access= O.get_access()
+	var/list/access = O.get_access()
 	if(access)
 		access2add = access.Copy()
 		return TRUE
@@ -150,7 +150,7 @@
 	name = "Soilson Key"
 	desc = "This key is used by the Soilsons."
 	icon_state = "rustkey"
-	lockids = list(ACCESS_FARM)
+	lockids = list(ACCESS_FARM, ACCESS_BUTCHER)
 
 /obj/item/key/merchant
 	name = "merchant's key"
@@ -218,6 +218,12 @@
 	desc = "This key belongs to the City Watch."
 	icon_state = "spikekey"
 	lockids = list(ACCESS_GARRISON)
+
+/obj/item/key/lieutenant
+	name = "city watch lieutenant key"
+	desc = "This key belongs to the Lieutenant of the City Watch."
+	icon_state = "spikekey"
+	lockids = list(ACCESSS_LIEUTENANT)
 
 /obj/item/key/forrestgarrison
 	name = "forest guard key"
@@ -757,3 +763,22 @@
 	icon_state = "mazekey"
 	lockids = list("banditcamp")
 
+
+////// MINOR NOBLES
+/obj/item/key/mnoble1
+	name = "Key of the noble house 1"
+	desc = "A very detailed steel key, has gold details and a purple gemstone on it... is for the noble house number one."
+	icon_state = "noble1"
+	lockids = list("nobles1")
+
+/obj/item/key/mnoble2
+	name = "Key of the noble house 2"
+	desc = "A very detailed steel key, has gold details and a yellow gemstone on it... is for the noble house number two."
+	icon_state = "noble2"
+	lockids = list("nobles2")
+
+/obj/item/key/mnoble3
+	name = "Key of the noble house 3"
+	desc = "A very detailed steel key, has gold details and a red gemstone on it... is for the noble house number three?"
+	icon_state = "noble3"
+	lockids = list("nobles3")

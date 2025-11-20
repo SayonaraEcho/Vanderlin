@@ -3,24 +3,29 @@
 	tutorial = "Born a wastrel in the dirt, you clawed your way up. Either by luck or, gods forbid, effort to earn a place in the Merchant's Guild. \
 	Now, you are either a ruthless economist or a disgraced steward from distant lands. Where you came from no longer matters. \
 	What matters now is you make sure the fools around you keep buying what you sell. Everything has a price, and you shall be the beating heart of this economy."
-	flag = MERCHANT
 	department_flag = COMPANY
 	job_flags = (JOB_ANNOUNCE_ARRIVAL | JOB_SHOW_IN_CREDITS | JOB_EQUIP_RANK | JOB_NEW_PLAYER_JOINABLE )
 	display_order = JDO_MERCHANT
 	faction = FACTION_TOWN
 	total_positions = 1
 	spawn_positions = 1
-	min_pq = 1
 	bypass_lastclass = TRUE
 	selection_color = "#192bc2"
 	cmode_music = 'sound/music/cmode/towner/CombatTowner2.ogg'
 
 	allowed_races = RACES_PLAYER_ALL
 
-	outfit = /datum/outfit/job/merchant
+	outfit = /datum/outfit/merchant
 	give_bank_account = 200
 
-/datum/outfit/job/merchant/pre_equip(mob/living/carbon/human/H)
+	exp_type = list(EXP_TYPE_LIVING, EXP_TYPE_MERCHANT_COMPANY)
+	exp_types_granted  = list(EXP_TYPE_MERCHANT_COMPANY)
+	exp_requirements = list(
+		EXP_TYPE_LIVING = 600,
+		EXP_TYPE_MERCHANT_COMPANY = 300,
+	)
+
+/datum/outfit/merchant/pre_equip(mob/living/carbon/human/H)
 	..()
 
 	neck = /obj/item/clothing/neck/mercator

@@ -38,8 +38,7 @@ GLOBAL_LIST_INIT(confusion_victims, list())
 	anchored = 1
 	icon = 'icons/effects/vampire/64x64.dmi'
 	icon_state = ""
-	pixel_x = -32/2
-	pixel_y = -32/2
+	SET_BASE_PIXEL(-16, -16)
 	plane = ABOVE_LIGHTING_PLANE
 	mouse_opacity = 0
 	var/duration = 5
@@ -53,7 +52,7 @@ GLOBAL_LIST_INIT(confusion_victims, list())
 	if (!specific_victim)
 		playsound(T, 'sound/effects/vampire/confusion_start.ogg', 75, 0, 0)
 	for(var/turf/U in range(radius, T))
-		if (istype(U, /area/rogue/indoors/town/church))//the chapel is protected against such illusions, the mobs in it will still be affected however.
+		if (istype(U, /area/indoors/town/church))//the chapel is protected against such illusions, the mobs in it will still be affected however.
 			continue
 		var/dist = cheap_pythag(U.x - T.x, U.y - T.y)
 		if (dist < 15 || prob((radius-dist)*4))

@@ -29,12 +29,10 @@
 	// we don't use innate_traits here because zombies aren't meant to get their traits on_gain.
 	/// Traits applied to the owner mob when we turn into a zombie
 	var/static/list/traits_zombie = list(
-		TRAIT_NOSTAMINA,
+		TRAIT_NOENERGY,
 		TRAIT_NOMOOD,
-		TRAIT_NOLIMBDISABLE,
 		TRAIT_NOHUNGER,
 		TRAIT_EASYDISMEMBER,
-		TRAIT_CRITICAL_WEAKNESS,
 		TRAIT_NOPAIN,
 		TRAIT_NOBREATH,
 		TRAIT_TOXIMMUNE,
@@ -43,7 +41,6 @@
 		TRAIT_SHOCKIMMUNE,
 		TRAIT_SPELLBLOCK,
 		TRAIT_BLOODLOSS_IMMUNE,
-		TRAIT_ZOMBIE_SPEECH,
 		TRAIT_ZOMBIE_IMMUNE,
 		TRAIT_ROTMAN,
 	)
@@ -96,10 +93,15 @@
 	owner.current.skills?.skill_experience = list()
 	zombie.cmode_music ='sound/music/cmode/combat_weird.ogg'
 	zombie.bloodpool = 0 // Deadites have no vitae to drain from
+	zombie.candodge = FALSE
+	zombie.canparry = FALSE
 	var/datum/language_holder/mob_language = zombie.get_language_holder()
 	prev_language = mob_language.copy()
 	zombie.remove_all_languages()
-	zombie.grant_language(/datum/language/hellspeak)
+	zombie.grant_language(/datum/language/undead)
+	if(zombie.dna?.species)
+		zombie.dna.species.native_language = "Zizo Chant"
+		zombie.dna.species.accent_language = zombie.dna.species.get_accent(zombie.dna.species.native_language)
 
 	zombie.ai_controller = new /datum/ai_controller/zombie(zombie)
 	zombie.AddComponent(/datum/component/ai_aggro_system)
@@ -125,6 +127,8 @@
 	zombie.remove_stat_modifier("[type]")
 	zombie.cmode_music = old_cmode_music
 	zombie.set_patron(patron)
+	zombie.candodge = TRUE
+	zombie.canparry = TRUE
 	owner.current.skills?.known_skills = stored_skills
 	owner.current.skills?.skill_experience = stored_experience
 	for(var/trait in traits_zombie)
@@ -214,14 +218,11 @@
 
 	for(var/datum/status_effect/effect in zombie.status_effects) //necessary to prevent exploits
 		zombie.remove_status_effect(effect)
-	var/offset_strength = 7 - zombie.base_strength
-	var/offset_speed = 2 - zombie.base_speed
-	var/offset_intelligence = 1 - zombie.base_intelligence
-	var/offset_constitution = 5 - zombie.base_constitution
-	zombie.set_stat_modifier("[type]", STATKEY_STR, offset_strength)
-	zombie.set_stat_modifier("[type]", STATKEY_SPD, offset_speed)
-	zombie.set_stat_modifier("[type]", STATKEY_INT, offset_intelligence)
-	zombie.set_stat_modifier("[type]", STATKEY_CON, offset_constitution)
+
+	zombie.modifier_set_stat_to("[type]", STATKEY_STR, 12)
+	zombie.modifier_set_stat_to("[type]", STATKEY_SPD, 1)
+	zombie.modifier_set_stat_to("[type]", STATKEY_INT, 1)
+	zombie.modifier_set_stat_to("[type]", STATKEY_CON, 15)
 
 	zombie.bloodpool = 0 // Again, just in case.
 
@@ -268,7 +269,6 @@
 		zombie.heal_wounds(INFINITY) //Heal every wound that is not permanent
 	zombie.set_stat(UNCONSCIOUS) //Start unconscious
 	zombie.updatehealth() //then we check if the mob should wake up
-	// zombie.update_mobility()
 	zombie.update_sight()
 	zombie.reload_fullscreen()
 	transform_zombie()

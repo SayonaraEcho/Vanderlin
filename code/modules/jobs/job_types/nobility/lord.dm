@@ -9,14 +9,12 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	you sit at the center of every plot, and every whisper of ambition. Every man, woman, and child may envy your power and \
 	would replace you in the blink of an eye. But remember, its not envy that keeps you in place, it is your will. Show them \
 	the error of their ways."
-	flag = LORD
 	department_flag = NOBLEMEN
 	job_flags = (JOB_ANNOUNCE_ARRIVAL | JOB_SHOW_IN_CREDITS | JOB_EQUIP_RANK | JOB_NEW_PLAYER_JOINABLE)
 	display_order = JDO_LORD
 	faction = FACTION_TOWN
 	total_positions = 0
 	spawn_positions = 1
-	min_pq = 25
 
 	spells = list(
 		/datum/action/cooldown/spell/undirected/list_target/grant_title,
@@ -24,7 +22,7 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	)
 
 	allowed_races = RACES_PLAYER_ROYALTY
-	outfit = /datum/outfit/job/lord
+	outfit = /datum/outfit/lord
 	bypass_lastclass = TRUE
 	give_bank_account = 500
 	selection_color = "#7851A9"
@@ -32,15 +30,30 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	cmode_music = 'sound/music/cmode/nobility/combat_noble.ogg'
 	can_have_apprentices = FALSE
 
-/datum/job/lord/get_informed_title(mob/mob)
-	return "[ruler_title]"
+	job_bitflag = BITFLAG_ROYALTY
+
+	exp_type = list(EXP_TYPE_NOBLE, EXP_TYPE_LIVING, EXP_TYPE_LEADERSHIP)
+	exp_types_granted  = list(EXP_TYPE_NOBLE, EXP_TYPE_LEADERSHIP)
+	exp_requirements = list(
+		EXP_TYPE_LIVING = 1200,
+		EXP_TYPE_NOBLE = 900,
+		EXP_TYPE_LEADERSHIP = 300
+	)
+
+
+/datum/job/lord/get_informed_title(mob/mob, change_title = FALSE, new_title)
+	if(change_title)
+		ruler_title = new_title
+		return "[ruler_title]"
+	else
+		return "[ruler_title]"
 
 //TODO: MOVE THIS INTO TICKER INIT
 /datum/job/lord/after_spawn(mob/living/spawned, client/player_client)
-	..()
+	. = ..()
 	SSticker.rulermob = spawned
 	var/mob/living/carbon/human/H = spawned
-	addtimer(CALLBACK(H, TYPE_PROC_REF(/mob, lord_color_choice)), 5 SECONDS)
+	addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, lord_color_choice)), 7 SECONDS)
 	if(spawned.gender == MALE)
 		SSfamilytree.AddRoyal(H, FAMILY_FATHER)
 		ruler_title = "[SSmapping.config.monarch_title]"
@@ -52,16 +65,25 @@ GLOBAL_LIST_EMPTY(lord_titles)
 	if(GLOB.keep_doors.len > 0)
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(know_keep_door_password), H), 7 SECONDS)
 
-/datum/outfit/job/lord
-	job_bitflag = BITFLAG_ROYALTY
+/datum/outfit/lord/map_override(mob/living/carbon/human/H)
+	if(SSmapping.config.map_name != "Voyage")
+		return
+	head = /obj/item/clothing/head/helmet/leather/tricorn
+	cloak = /obj/item/clothing/cloak/half
+	l_hand = null
+	armor = /obj/item/clothing/armor/leather/jacket/silk_coat
+	shirt = /obj/item/clothing/shirt/undershirt/puritan
+	wrists = null
+	shoes = /obj/item/clothing/shoes/boots
 
-/datum/outfit/job/lord/pre_equip(mob/living/carbon/human/H)
+/datum/outfit/lord/pre_equip(mob/living/carbon/human/H)
 	..()
 	head = /obj/item/clothing/head/crown/serpcrown
 	backr = /obj/item/storage/backpack/satchel
 	belt = /obj/item/storage/belt/leather/plaquegold
 	beltl = /obj/item/weapon/knife/dagger/steel/special
-	scabbards = list(/obj/item/weapon/scabbard/knife)
+	beltr = /obj/item/weapon/sword/rapier
+	scabbards = list(/obj/item/weapon/scabbard/knife/royal, /obj/item/weapon/scabbard/sword/royal)
 	ring = /obj/item/clothing/ring/active/nomag
 	l_hand = /obj/item/weapon/lordscepter
 
@@ -118,7 +140,6 @@ GLOBAL_LIST_EMPTY(lord_titles)
 
 /datum/job/exlord //just used to change the lords title
 	title = "Ex-Monarch"
-	flag = LORD
 	department_flag = NOBLEMEN
 	faction = FACTION_TOWN
 	total_positions = 0

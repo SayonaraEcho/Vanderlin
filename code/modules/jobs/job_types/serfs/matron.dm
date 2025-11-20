@@ -4,20 +4,19 @@
 	Time has softened your edge but not your wit, thanks to your unlikely kinship with your old adventuring party.\
 	Now, you guide the orphans with both a firm and gentle hand, ensuring they grow up sharp, swift, and self-sufficient.\
 	Perhaps one dae, those fledglings might leap from the your nest and soar to a greater legacy."
-	flag = JESTER
 	department_flag = PEASANTS
 	job_flags = (JOB_ANNOUNCE_ARRIVAL | JOB_SHOW_IN_CREDITS | JOB_EQUIP_RANK | JOB_NEW_PLAYER_JOINABLE)
 	display_order = JDO_MATRON
 	faction = FACTION_TOWN
 	total_positions = 1
 	spawn_positions = 1
-	min_pq = 10
 
 	allowed_sexes = list(FEMALE)
 	allowed_ages = list(AGE_MIDDLEAGED, AGE_OLD, AGE_IMMORTAL)
 	allowed_races = RACES_PLAYER_NONEXOTIC
+	blacklisted_species = list(SPEC_ID_HALFLING)
 
-	outfit = /datum/outfit/job/matron
+	outfit = /datum/outfit/matron
 	give_bank_account = 35
 	can_have_apprentices = TRUE
 	cmode_music = 'sound/music/cmode/nobility/CombatSpymaster.ogg'
@@ -27,7 +26,16 @@
 		/datum/action/cooldown/spell/undirected/seek_orphan,
 	)
 
-/datum/outfit/job/matron/pre_equip(mob/living/carbon/human/H)
+	exp_type = list(EXP_TYPE_LIVING, EXP_TYPE_ADVENTURER, EXP_TYPE_THIEF)
+	exp_types_granted = list(EXP_TYPE_ADVENTURER, EXP_TYPE_THIEF)
+	exp_requirements = list(
+		EXP_TYPE_LIVING = 1200,
+		EXP_TYPE_ADVENTURER = 300,
+		EXP_TYPE_THIEF = 300
+	)
+
+
+/datum/outfit/matron/pre_equip(mob/living/carbon/human/H)
 	..()
 	H.adjust_skillrank(/datum/skill/misc/sewing, 3, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/sneaking, 4, TRUE)

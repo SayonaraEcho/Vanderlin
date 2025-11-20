@@ -4,7 +4,6 @@
 	tutorial = "Cloth, linen, silk and leather. \
 	You've tirelessly studied and poured your life into \
 	sewing articles of protection, padding, and fashion for serf and noble alike."
-	flag = TAILOR
 	department_flag = SERFS
 	job_flags = (JOB_ANNOUNCE_ARRIVAL | JOB_SHOW_IN_CREDITS | JOB_EQUIP_RANK | JOB_NEW_PLAYER_JOINABLE)
 	display_order = JDO_TAILOR
@@ -15,13 +14,13 @@
 
 	allowed_races = RACES_PLAYER_ALL
 
-	outfit = /datum/outfit/job/tailor
+	outfit = /datum/outfit/tailor
+	give_bank_account = 25
 	cmode_music = 'sound/music/cmode/towner/CombatTowner2.ogg'
 
-/datum/outfit/job/tailor
 	job_bitflag = BITFLAG_CONSTRUCTOR
 
-/datum/outfit/job/tailor/pre_equip(mob/living/carbon/human/H)
+/datum/outfit/tailor/pre_equip(mob/living/carbon/human/H)
 	..()
 
 	shoes = /obj/item/clothing/shoes/nobleboot
@@ -38,6 +37,7 @@
 	H.adjust_skillrank(/datum/skill/craft/crafting, 3, TRUE)
 	H.adjust_skillrank(/datum/skill/combat/knives, 3, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/sneaking, 2, TRUE)
+	H.adjust_skillrank(/datum/skill/labor/taming, 3, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/medicine, 2, TRUE)
 	H.adjust_skillrank(/datum/skill/misc/reading, 1, TRUE)
 	H.adjust_skillrank(/datum/skill/craft/carpentry, 1, TRUE)

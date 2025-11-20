@@ -38,9 +38,7 @@
 	new /obj/effect/decal/cleanable/dyes(get_turf(src))
 	var/obj/item/bin/I = new(loc)
 	I.kover = TRUE
-	I.update_appearance()
 	return ..()
-
 
 /obj/structure/dye_bin/Initialize(mapload, obj/item/dye_pack/inserted_pack)
 	. = ..()
@@ -147,7 +145,7 @@
 
 	switch(href_list["action"])
 		if("select")
-			var/choice = input(user,"Choose your dye:", "Dyes", null) as null|anything in selectable_colors
+			var/choice = browser_input_list(user,"Choose your dye:", "Dyes", selectable_colors)
 			if(!choice)
 				return
 			active_color = selectable_colors[choice]
@@ -168,7 +166,7 @@
 				if(href_list["type"] == "detail" && isclothing(inserted))
 					var/obj/item/clothing/cloth = inserted
 					cloth.detail_color = active_color
-					cloth.update_appearance()
+					cloth.update_appearance(UPDATE_OVERLAYS)
 				else
 					inserted.add_atom_colour(active_color, FIXED_COLOUR_PRIORITY)
 

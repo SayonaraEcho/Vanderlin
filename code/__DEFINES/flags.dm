@@ -127,6 +127,8 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define INDESTRUCTIBLE	(1<<6)
 /// can't be frozen
 #define FREEZE_PROOF	(1<<7)
+/// can't be moved by explosions, this one is excluded from everything proof
+#define EXPLOSION_MOVE_PROOF (1<<8)
 
 #define EVERYTHING_PROOF (LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | INDESTRUCTIBLE | FREEZE_PROOF)
 
@@ -156,3 +158,7 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 //alternate appearance flags
 #define AA_TARGET_SEE_APPEARANCE (1<<0)
 #define AA_MATCH_TARGET_OVERLAYS (1<<1)
+
+/// Checks the visibility between two other objects.
+#define CAN_THEY_SEE(target, source) ((source in viewers(7, target)) || in_range(target, source))
+
