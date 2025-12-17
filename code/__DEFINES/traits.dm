@@ -121,6 +121,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_IGNORESLOWDOWN	"ignoreslow"
 #define TRAIT_IGNOREDAMAGESLOWDOWN "ignoredamageslowdown"
 #define TRAIT_DEATHCOMA			"deathcoma" //Causes death-like unconsciousness
+#define TRAIT_SANGUINE			"sanguine"
 /// The mob has the stasis effect.
 /// Does nothing on its own, applied via status effect.
 #define TRAIT_STASIS "in_stasis"
@@ -200,6 +201,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_CLAN_LEADER "clan_leader"
 #define TRAIT_BLUEPRINT_VISION "blueprint_vision"
 #define TRAIT_WEREWOLF_RAGE "ww_rage"
+#define TRAIT_PUTRID "Putrid"
 /// Receives echolocation images.
 #define TRAIT_ECHOLOCATION_RECEIVER "echolocation_receiver"
 /// Echolocation has a higher range.
@@ -341,6 +343,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_PSYDONITE "Psydonite's Devotion" // Anti-Miracles on a selective basis, anastasis / cure rot still apply. Slow passive wound healing while you have blood.
 #define TRAIT_BLACKBAGGER "Apprehension Techniques" // Capable of using Garrotes and Blackbags. Apprehension techniques.
 #define TRAIT_LYCANRESILENCE "Werewolf Resilence"
+#define TRAIT_EVASIVE		"Evasive"
 
 #define TRAIT_WEBWALK 					"Webwalker"
 #define TRAIT_BRUSHWALK					"Brushwalker"
@@ -358,6 +361,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NOBLE					"Noble Blooded"
 #define TRAIT_EMPATH					"Empath"
 #define TRAIT_BREADY					"Battleready"
+#define TRAIT_BLINDFIGHTING 			"Sixth-Sense"
 #define TRAIT_HEARING_SENSITIVE 		"hearing_sensitive"
 #define TRAIT_MEDIUMARMOR				"Mail Training"
 #define TRAIT_HEAVYARMOR				"Plate Training"
@@ -391,7 +395,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SHOCKIMMUNE				"Shock Immunity"
 #define TRAIT_LEGENDARY_ALCHEMIST		"Expert Herb Finder"
 #define TRAIT_LIGHT_STEP				"Light Step" //Can't trigger /obj/structure/trap/'s
-#define TRAIT_THIEVESGUILD				"Thieves Guild Member"
+#define TRAIT_THIEVESGUILD				"Thieves' Guild Member"
 #define TRAIT_ENGINEERING_GOGGLES		"Engineering Goggles"
 #define TRAIT_SEEPRICES				    "Golden Blood" //See prices
 #define TRAIT_SEE_LEYLINES				"Magical Visions"
@@ -471,7 +475,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_VIOLATOR					"Violator of the Coven"
 #define TRAIT_TORPOR					"Endless Slumber"
 #define TRAIT_SATE "SATE"
-#define TRAIT_NODE_EXTRACTED "Chimeric Node Extracted"
+#define TRAIT_NODE_EXTRACTED "Humors Extracted"
 
 // JOB RELATED TRAITS
 
