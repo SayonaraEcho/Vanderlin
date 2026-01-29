@@ -62,7 +62,7 @@
 			to_chat(user, "<span class='warning'>\The [src] is currently smelting. Wait for it to finish, or douse it with water to retrieve items from it.</span>")
 			return
 
-	if(istype(W, /obj/item/ore/coal))
+	if(W.firefuel)
 		if(alert(usr, "Fuel \the [src] with [W]?", "VANDERLIN", "Fuel", "Smelt") == "Fuel")
 			return ..()
 
@@ -131,24 +131,26 @@
 	..()
 	if(maxore > 1)
 		return
-	if(on)
-		if(ore.len)
-			if(cooking < 20)
-				cooking++
-				playsound(src,'sound/misc/smelter_sound.ogg', 50, FALSE)
-				actively_smelting = TRUE
-			else
-				if(cooking == 20)
-					for(var/obj/item/I in ore)
-						if(I.smeltresult)
-							var/obj/item/R = new I.smeltresult(src, ore[I])
-							ore -= I
-							ore += R
-							qdel(I)
-					playsound(src,'sound/misc/smelter_fin.ogg', 100, FALSE)
-					visible_message("<span class='notice'>\The [src] finished smelting.</span>")
-					cooking = 21
-					actively_smelting = FALSE
+	if(!on)
+		return
+	if(!length(ore))
+		return
+	if(cooking < 20)
+		cooking++
+		playsound(src,'sound/misc/smelter_sound.ogg', 50, FALSE)
+		actively_smelting = TRUE
+		return
+	if(cooking == 20)
+		for(var/obj/item/I in ore)
+			if(I.smeltresult)
+				var/obj/item/R = new I.smeltresult(src, ore[I])
+				ore -= I
+				ore += R
+				qdel(I)
+		playsound(src,'sound/misc/smelter_fin.ogg', 100, FALSE)
+		visible_message(span_notice("[src] finished smelting."))
+		cooking = 21
+		actively_smelting = FALSE
 
 /obj/machinery/light/fueled/smelter/burn_out()
 	cooking = 0

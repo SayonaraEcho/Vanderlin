@@ -167,7 +167,6 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 	var/list/alt_intents //these replace main intents
 	var/gripsprite = FALSE //use alternate grip sprite for inhand
 	var/gripspriteonmob = FALSE //use alternate sprite for onmob
-	var/wieldsound = FALSE
 
 	/// Item will be scaled by this factor when on the ground.
 	var/dropshrink = 0
@@ -332,7 +331,7 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 /obj/item/proc/apply_components()
 	if(force_wielded || gripped_intents)
 		var/wielded_force = force_wielded ? force_wielded : force
-		AddComponent(/datum/component/two_handed, force_unwielded = force, force_wielded = wielded_force, wield_callback = CALLBACK(src, PROC_REF(on_wield)), unwield_callback = CALLBACK(src, PROC_REF(on_unwield)), wield_blocking = wield_block)
+		AddComponent(/datum/component/two_handed, force_unwielded = force, force_wielded = wielded_force, wield_callback = CALLBACK(src, PROC_REF(on_wield)), unwield_callback = CALLBACK(src, PROC_REF(on_unwield)), wield_block_offhand = wield_block)
 
 /obj/item/proc/get_detail_tag() //this is for extra layers on clothes or items
 	return detail_tag
@@ -592,7 +591,7 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 		get_inspect_entries(inspec)
 		SEND_SIGNAL(src, COMSIG_TOPIC_INSPECT, inspec)
 
-		to_chat(usr, "[inspec.Join()]")
+		to_chat(usr, examine_block("[inspec.Join()]"))
 
 /obj/item
 	var/simpleton_price = FALSE
@@ -630,10 +629,10 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 //			inspec += "\n<b>ENCUMBRANCE:</b> [eweight]"
 
 	if(alt_intents)
-		inspect_list += "\n<b>ALT-GRIP</b>"
+		inspect_list += "\n<b>ALT-GRIPPABLE</b>"
 
 	if(can_parry)
-		inspect_list += "\n<b>DEFENSE:</b> [wdefense]"
+		inspect_list += "\n<b>PARRY:</b> [wdefense]"
 
 	if(max_blade_int)
 		inspect_list += "\n<b>SHARPNESS:</b> "
@@ -995,7 +994,7 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 		M.adjust_eye_blur(30 SECONDS)
 		if(M.stat != DEAD)
 			to_chat(M, "<span class='danger'>My eyes start to bleed profusely!</span>")
-		if(!(HAS_TRAIT(M, TRAIT_BLIND) || HAS_TRAIT(M, TRAIT_NEARSIGHT)))
+		if(!M.is_nearsighted_from(EYE_DAMAGE))
 			to_chat(M, "<span class='danger'>I become nearsighted!</span>")
 		M.become_nearsighted(EYE_DAMAGE)
 		if(prob(50))
@@ -1343,8 +1342,6 @@ GLOBAL_DATUM_INIT(fire_overlay, /mutable_appearance, mutable_appearance('icons/e
 
 /obj/item/proc/on_wield(obj/item/source, mob/living/carbon/user)
 	wdefense += 1
-	if(!wieldsound)
-		playsound(src, pick('sound/combat/weaponr1.ogg','sound/combat/weaponr2.ogg'), 50, TRUE)
 	user.update_a_intents()
 
 /obj/item/proc/on_unwield(obj/item/source, mob/living/carbon/user)
